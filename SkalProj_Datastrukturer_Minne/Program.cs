@@ -62,9 +62,63 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineList()
         {
-            /*
-             * Loop this method untill the user inputs something to exit to main menue.
-             * Create a switch statement with cases '+' and '-'
+
+
+            Console.WriteLine("Please navigate through the menu by inputting a character \n(+, -, 0 ,1) of your choice"
+                + "\n+. Add string to List"
+                + "\n-. Remove ´first item from List"
+                + "\n0. Back to main menu");
+            char input = ' '; //Creates the character input to be used with the switch-case below.
+
+            // Loop this method untill the user inputs something to exit to main menue.
+            bool keepLooping = true;
+            List<string> theList = new List<string>();
+            while (keepLooping)
+            {
+                try
+                {
+                    input = Console.ReadLine()![0]; //Tries to set input to the first char in an input line
+                }
+                catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please enter some input!");
+                }
+                switch (input)
+                {
+                    
+                   
+                    case '+':
+                        Console.WriteLine("Before adding the string, the capacity of the list is: " + CheckList(theList));
+                        Console.WriteLine("Please type in string for Da List");
+                        theList.Add(UserInput());
+                        Console.WriteLine("After adding the string, the capacity of the list is: " + CheckList(theList));
+                        break;
+                    case '-':
+                        Console.WriteLine("removing the first string of the list");
+                        try
+                        {
+                            Console.WriteLine("Before removing the string, the capacity of the list is: " + CheckList(theList));
+                            theList.RemoveAt(0); //Tries to set input to the first char in an input line
+                            Console.WriteLine("After removing the string, the capacity of the list is: " + CheckList(theList));
+                        }
+                        catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
+                        {
+                            Console.Clear();
+                            Console.WriteLine("The list seems to be empty, please enter a string to the list");
+                            ExamineList();
+                        }
+                        break;
+                    case '0':
+                        Main();
+                        break;
+                    default:
+                        Console.WriteLine("Please enter some valid input (+, -, 0)");
+                        break;
+                }
+
+            }
+            /* * Create a switch statement with cases '+' and '-'
              * '+': Add the rest of the input to the list (The user could write +Adam and "Adam" would be added to the list)
              * '-': Remove the rest of the input from the list (The user could write -Adam and "Adam" would be removed from the list)
              * In both cases, look at the count and capacity of the list
@@ -113,6 +167,20 @@ namespace SkalProj_Datastrukturer_Minne
              */
 
         }
+
+        static string UserInput()
+        {
+            return Console.ReadLine();
+        }
+
+        static int CheckList(List<string> list)
+        {
+            var capacity = list.Capacity;
+
+            return capacity;
+        }
+
+        
 
     }
 }
