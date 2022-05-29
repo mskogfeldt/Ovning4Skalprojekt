@@ -55,6 +55,12 @@ namespace SkalProj_Datastrukturer_Minne
                     case '4':
                         CheckParanthesis();
                         break;
+                    case '5':
+                        CheckParanthesis();
+                        break;
+                    case '6':
+                        CheckFibonacciItterative();
+                        break;
                     /*
                      * Extend the menu to include the recursive 
                      * and iterative exercises.
@@ -342,6 +348,55 @@ namespace SkalProj_Datastrukturer_Minne
 
         }
 
+        static void CheckFibonacciItterative()
+        {
+
+            bool keepLooping = true;
+            string fibonacci = "";
+            int fibonacciInt = 0;
+
+            while (keepLooping)
+            {
+                Console.WriteLine("Please navigate through the menu by inputting a character \n(+, -, 0 ,1) of your choice"
+                    + "\n+. Type a number in the Fibonacci sequence:"
+
+                    + "\n0. Back to main menu");
+                char input = ' '; //Creates the character input to be used with the switch-case below.
+                try
+                {
+                    input = Console.ReadLine()![0]; //Tries to set input to the first char in an input line
+                }
+                catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please enter some input!");
+                }
+                switch (input)
+                {
+                    case '+':
+                        Console.WriteLine("Type the number now ");
+                        fibonacci = UserInput();
+                        try
+                        {
+                            fibonacciInt = Int32.Parse(fibonacci);
+                            fibonacciInt = ItteraticeFibonacciSequence(fibonacciInt);
+                            Console.WriteLine("The number you are looking for is: " + fibonacciInt);
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Unable to parse '{input}'");
+                        }
+                        break;
+                    case '0':
+                        Main();
+                        break;
+                    default:
+                        Console.WriteLine("Please enter some valid input (+, -, 0)");
+                        break;
+                }
+            }
+        }
+
         static string UserInput()
         {
             return Console.ReadLine();
@@ -383,25 +438,25 @@ namespace SkalProj_Datastrukturer_Minne
             //making a sting of all Parantheses
             string actualParentesis = MakeListOfParantheses(toBeTested);
             string updatedWord;
-           // if (toBeTested.Length > 1)
+            // if (toBeTested.Length > 1)
             //{
-                for (int i = actualParentesis.Length; i >= 0; i--)
+            for (int i = actualParentesis.Length; i >= 0; i--)
+            {
+                //seeing so that the last char is a closing Parantheses
+                if (actualParentesis.Length > 0 && CheckClosingParantheses(actualParentesis[i - 1]))
                 {
-                    //seeing so that the last char is a closing Parantheses
-                    if (actualParentesis.Length > 0 &&  CheckClosingParantheses(actualParentesis[i - 1]))
+                    //seeing where the closest opening Parantheses or returning -1 if it finds non
+                    int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
+                    if (openingParanthesesIndex == -1) return false;
+                    else
                     {
-                        //seeing where the closest opening Parantheses or returning -1 if it finds non
-                        int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
-                        if (openingParanthesesIndex == -1) return false;
-                        else
-                        {
-                            //removing the the last char, ie a closing Parantheses, and the opening Parantheses
-                            updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
-                            //calling this metod again
-                            TestStringParanthesesTheMotherShip(updatedWord);
-                        }
+                        //removing the the last char, ie a closing Parantheses, and the opening Parantheses
+                        updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
+                        //calling this metod again
+                        TestStringParanthesesTheMotherShip(updatedWord);
                     }
                 }
+            }
             //}
             return true;
         }
@@ -428,8 +483,8 @@ namespace SkalProj_Datastrukturer_Minne
 
         static int IndexOfOpeningParantheses(string toBeTested)
         {
-            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length-1]);
-            for (int i = toBeTested.Length -1; i >= 0; i--)
+            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length - 1]);
+            for (int i = toBeTested.Length - 1; i >= 0; i--)
             {
                 if (toBeTested[i] == openingParantheses) return i;
             }
@@ -444,6 +499,47 @@ namespace SkalProj_Datastrukturer_Minne
             else return '<';
         }
 
+        static int RecursiveEven(int n)
+        {
+            if (n == 0)
+            {
+                return 0;
+            }
+
+            return (RecursiveEven(n - 1) + 2);
+        }
+
+        static int RecursiveFibonacciSequence(int n)
+        {
+
+            if (n == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return (RecursiveFibonacciSequence(n - 2) + 1);
+            }
+        }
+
+        static int ItterativeEven(int n)
+        {
+            return n * 2;
+        }
+
+        static int ItteraticeFibonacciSequence(int n)
+        {
+            // int damnHowMuchEasierIteerativeIsThanRecursive = 0;
+            List<int> damnHowMuchEasierIteerativeIsThanRecursive = new List<int>() { };
+            for (int i = 0; i < n + 1; i++)
+            {
+                if (i == 0) damnHowMuchEasierIteerativeIsThanRecursive.Add(i);
+                else if (i == 1) damnHowMuchEasierIteerativeIsThanRecursive.Add(i);
+                else damnHowMuchEasierIteerativeIsThanRecursive.Add(i + damnHowMuchEasierIteerativeIsThanRecursive[i - 2]);
+            }
+            return damnHowMuchEasierIteerativeIsThanRecursive[n + 1];
+        }
+
         static string RemoveClosedParantheses(string toBeedited, int openingParantheses)
         {
             string editedSting = "";
@@ -453,85 +549,9 @@ namespace SkalProj_Datastrukturer_Minne
             }
             return editedSting;
         }
+
+
     }
+
+
 }
-
-/*
-        static List<int> ModyfyList(List<int> toBeTested, char charToTest)
-        {
-            if (charToTest == '(') toBeTested[0]++;
-            if (charToTest == ')') toBeTested[0]--;
-            if (charToTest == '[') toBeTested[1]++;
-            if (charToTest == ']') toBeTested[1]--;
-            if (charToTest == '{') toBeTested[2]++;
-            if (charToTest == '}') toBeTested[2]--;
-            if (charToTest == '<') toBeTested[1]++;
-            if (charToTest == '>') toBeTested[1]--;
-            return toBeTested;
-        }*/
-
-/*
-        static bool TestStringParantheses(string toBeTested)
-        {
-            List<char> positiveChars = new List<char>() { '(', '[', '{', '<' };
-            List<char> negativeChars = new List<char>() { ')', ']', '}', '>' };
-            List<char> Parentesis = new List<char>() { '(', '[', '{', '<', ')', ']', '}', '>'};
-            List<char> actualParentesisopeners = new List<char>() { };
-            List<int> keepingTrackOfParantheses = new List<int> { 0, 0, 0, 0 };
-            char latestOpener = '£';
-            for (int i = 0; i < toBeTested.Length; i++)
-            {
-                if (positiveChars.Contains(toBeTested[i])) latestOpener = toBeTested[i];
-                if (negativeChars.Contains(toBeTested[i]))
-                {
-                    if (!CheckClosingParantheses(latestOpener, toBeTested[i])) return false;
-                }
-                keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
-                if (i == toBeTested.Length)
-                {
-                   // keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
-                    if (TestListLastIndex(keepingTrackOfParantheses)) return true;
-                    return false;
-                }
-            //    else
-              //  {
-                //    keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
-                  //  if (!TestList(keepingTrackOfParantheses)) return false;
-                //}
-            }
-            return true;
-        }*/
-
-/*
-        static bool TestList(List<int> toBeTested)
-        {
-            for (int i = 0; i < toBeTested.Count; i++)
-            {
-                if (i < 0) return false;
-            }
-            return true;
-        }
-
-        static bool TestListLastIndex(List<int> toBeTested)
-        {
-            int count = 0;
-            for (int i = 0; i < toBeTested.Count; i++)
-            {
-                if (i == 0) count ++;
-            }
-            if (count == toBeTested.Count) return true;
-            return false;
-        }*/
-
-// public 
-
-/*
-      static bool CheckClosingParantheses(char latestOpener, char toBeTested)
-      {
-          if (latestOpener == '(' && toBeTested == ')') return true;
-          if(latestOpener == '[' && toBeTested == ']') return true;
-          if(latestOpener == '{' && toBeTested == '}') return true;
-          if (latestOpener == '<' && toBeTested == '>') return true;
-          return false;
-
-      }*/
