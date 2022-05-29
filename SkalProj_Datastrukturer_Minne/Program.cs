@@ -106,7 +106,7 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.WriteLine("List count is. " + theList.Count());
                         break;
                     case '-':
-                        
+
                         Console.WriteLine("removing the first string of the list");
                         try
                         {
@@ -146,7 +146,7 @@ namespace SkalProj_Datastrukturer_Minne
         {
             Queue<string> theQueue = new Queue<string>();
             bool keepLooping = true;
-           
+
             while (keepLooping)
             {
                 Console.WriteLine("Please navigate through the menu by inputting a character \n(+, -, 0 ,1) of your choice"
@@ -176,7 +176,7 @@ namespace SkalProj_Datastrukturer_Minne
                         PrintTheCue(theQueue);
                         Console.WriteLine("The Queue has: " + theQueue.Count + " humans in it");
                         break;
-                    
+
                     case '-':
                         Console.WriteLine("removing the first string of the list");
                         try
@@ -214,7 +214,7 @@ namespace SkalProj_Datastrukturer_Minne
 
             // Loop this method until the user inputs something to exit to main menue.
             Stack<string> theStack = new Stack<string>();
-            
+
             bool keepLooping = true;
 
             while (keepLooping)
@@ -237,7 +237,7 @@ namespace SkalProj_Datastrukturer_Minne
                 {
                     case '+':
                         Console.WriteLine("Before adding the customer, the Queue looks like this ");
-                       // PrintTheCue(theStack);
+                        // PrintTheCue(theStack);
                         Console.WriteLine("The Queue has: " + theStack.Count + " humans in it");
                         Console.WriteLine("enter the customers name.");
                         theStack.Push(UserInput());
@@ -252,7 +252,7 @@ namespace SkalProj_Datastrukturer_Minne
                         try
                         {
                             Console.WriteLine("Before removing the customer, the Queue looks like this ");
-                           // PrintTheCue(theStack);
+                            // PrintTheCue(theStack);
                             Console.WriteLine("The Queue has: " + theStack.Count + " humans in it");
                             theStack.Pop();
                             Console.WriteLine("After removing the customer, the Queue looks like this ");
@@ -294,6 +294,46 @@ namespace SkalProj_Datastrukturer_Minne
 
         static void CheckParanthesis()
         {
+            string toBetested;
+
+            // Loop this method until the user inputs something to exit to main menue.
+            Stack<string> theStack = new Stack<string>();
+
+            bool keepLooping = true;
+
+            while (keepLooping)
+            {
+                Console.WriteLine("Please navigate through the menu by inputting a character \n(+, 0) of your choice"
+                    + "\n+. Add string to be tested"
+                    + "\n0. Back to main menu");
+                char input = ' '; //Creates the character input to be used with the switch-case below.
+                try
+                {
+                    input = Console.ReadLine()![0]; //Tries to set input to the first char in an input line
+                }
+                catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please enter some input!");
+                }
+                switch (input)
+                {
+                    case '+':
+                        Console.WriteLine("write your text, w ");
+                        toBetested = Console.ReadLine();
+                        //   if (TestStringParantheses(toBetested)) Console.WriteLine("Test sucess!");
+                        // else Console.WriteLine("Test failed!");
+                        break;
+                    case '0':
+                        Main();
+                        break;
+                    default:
+                        Console.WriteLine("Please enter some valid input (+, -, 0)");
+                        break;
+
+                }
+            }
+
             /*
              * Use this method to check if the paranthesis in a string is Correct or incorrect.
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
@@ -319,7 +359,7 @@ namespace SkalProj_Datastrukturer_Minne
             foreach (var item in cueue)
             {
                 Console.WriteLine(item);
-            } 
+            }
         }
 
         static void FippWord(string input)
@@ -338,7 +378,155 @@ namespace SkalProj_Datastrukturer_Minne
         }
 
 
+        static bool TestStringParanthesesTheMothership(string toBeTested)
+        {
+            //making a sting of all Parantheses
+            string actualParentesisopeners = MakeListOfParantheses(toBeTested);
+            string updatedWord;
 
+            for (int i = actualParentesisopeners.Length; i >= 0; i--)
+            {
+                //seeing so that the last char is a closing Parantheses
+                if (CheckClosingParantheses(actualParentesisopeners[i]))
+                {
+                    int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesisopeners);
+                    if (openingParanthesesIndex == -1) return false;
+                    else 
+                    {
+                        updatedWord = RemoveClosedParantheses(actualParentesisopeners, openingParanthesesIndex);
+                        TestStringParanthesesTheMothership(updatedWord);
+                    } 
+                }
+            }
+            return true;
+        }
+
+        static string MakeListOfParantheses(string text)
+        {
+            List<char> Parentesis = new List<char>() { '(', '[', '{', '<', ')', ']', '}', '>' };
+            string actualParentesis = "";
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (Parentesis.Contains(text[i])) actualParentesis += text[i];
+            }
+            return actualParentesis;
+
+        }
+        
+        static bool CheckClosingParantheses(char lastChar)
+        {
+            List<char> negativeChars = new List<char>() { ')', ']', '}', '>' };
+            if (negativeChars.Contains(lastChar)) return true;
+            return false;
+        }
+
+        static int IndexOfOpeningParantheses(string toBeTested)
+        {
+            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length]);
+            for (int i = toBeTested.Length; i >= 0; i--)
+            {
+                if (toBeTested[i] == openingParantheses) return i;
+            }
+            return -1;
+        }
+
+        static char FindOpeningParantheses(char closer)
+        {
+            if (closer == ')') return '(';
+            else if (closer == ']') return '[';
+            else if (closer == '}') return '{';
+            else return '<';
+        }
+
+        static string RemoveClosedParantheses(string toBeedited, int openingParantheses)
+        {
+            string editedSting = "";
+            for (int i = 0; i < toBeedited.Length - 1; i++)
+            {
+                if (i != openingParantheses) editedSting += toBeedited[i];
+            }
+            return editedSting;
+        }
     }
 }
 
+/*
+        static List<int> ModyfyList(List<int> toBeTested, char charToTest)
+        {
+            if (charToTest == '(') toBeTested[0]++;
+            if (charToTest == ')') toBeTested[0]--;
+            if (charToTest == '[') toBeTested[1]++;
+            if (charToTest == ']') toBeTested[1]--;
+            if (charToTest == '{') toBeTested[2]++;
+            if (charToTest == '}') toBeTested[2]--;
+            if (charToTest == '<') toBeTested[1]++;
+            if (charToTest == '>') toBeTested[1]--;
+            return toBeTested;
+        }*/
+
+/*
+        static bool TestStringParantheses(string toBeTested)
+        {
+            List<char> positiveChars = new List<char>() { '(', '[', '{', '<' };
+            List<char> negativeChars = new List<char>() { ')', ']', '}', '>' };
+            List<char> Parentesis = new List<char>() { '(', '[', '{', '<', ')', ']', '}', '>'};
+            List<char> actualParentesisopeners = new List<char>() { };
+            List<int> keepingTrackOfParantheses = new List<int> { 0, 0, 0, 0 };
+            char latestOpener = '£';
+            for (int i = 0; i < toBeTested.Length; i++)
+            {
+                if (positiveChars.Contains(toBeTested[i])) latestOpener = toBeTested[i];
+                if (negativeChars.Contains(toBeTested[i]))
+                {
+                    if (!CheckClosingParantheses(latestOpener, toBeTested[i])) return false;
+                }
+                keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
+                if (i == toBeTested.Length)
+                {
+                   // keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
+                    if (TestListLastIndex(keepingTrackOfParantheses)) return true;
+                    return false;
+                }
+            //    else
+              //  {
+                //    keepingTrackOfParantheses = ModyfyList(keepingTrackOfParantheses, toBeTested[i]);
+                  //  if (!TestList(keepingTrackOfParantheses)) return false;
+                //}
+            }
+            return true;
+        }*/
+
+/*
+        static bool TestList(List<int> toBeTested)
+        {
+            for (int i = 0; i < toBeTested.Count; i++)
+            {
+                if (i < 0) return false;
+            }
+            return true;
+        }
+
+        static bool TestListLastIndex(List<int> toBeTested)
+        {
+            int count = 0;
+            for (int i = 0; i < toBeTested.Count; i++)
+            {
+                if (i == 0) count ++;
+            }
+            if (count == toBeTested.Count) return true;
+            return false;
+        }*/
+
+// public 
+
+/*
+      static bool CheckClosingParantheses(char latestOpener, char toBeTested)
+      {
+          if (latestOpener == '(' && toBeTested == ')') return true;
+          if(latestOpener == '[' && toBeTested == ']') return true;
+          if(latestOpener == '{' && toBeTested == '}') return true;
+          if (latestOpener == '<' && toBeTested == '>') return true;
+          return false;
+
+      }*/
