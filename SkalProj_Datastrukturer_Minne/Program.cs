@@ -30,6 +30,8 @@ namespace SkalProj_Datastrukturer_Minne
                     + "\n2. Examine a Queue"
                     + "\n3. Examine a Stack"
                     + "\n4. CheckParanthesis"
+                    + "\n5. Fibonacci ala recursive"
+                    + "\n6. Fibonacci ala itterative"
                     + "\n0. Exit the application");
                 char input = ' '; //Creates the character input to be used with the switch-case below.
                 try
@@ -56,7 +58,7 @@ namespace SkalProj_Datastrukturer_Minne
                         CheckParanthesis();
                         break;
                     case '5':
-                        CheckParanthesis();
+                        CheckFibonacciRecursive();
                         break;
                     case '6':
                         CheckFibonacciItterative();
@@ -348,6 +350,55 @@ namespace SkalProj_Datastrukturer_Minne
 
         }
 
+        static void CheckFibonacciRecursive()
+        {
+
+            bool keepLooping = true;
+            string fibonacci = "";
+            int fibonacciInt = 0;
+
+            while (keepLooping)
+            {
+                Console.WriteLine("Please navigate through the menu by inputting a character \n(+, -, 0 ,1) of your choice"
+                    + "\n+. Type a number in the Fibonacci sequence:"
+
+                    + "\n0. Back to main menu");
+                char input = ' '; //Creates the character input to be used with the switch-case below.
+                try
+                {
+                    input = Console.ReadLine()![0]; //Tries to set input to the first char in an input line
+                }
+                catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please enter some input!");
+                }
+                switch (input)
+                {
+                    case '+':
+                        Console.WriteLine("Type the number now ");
+                        fibonacci = UserInput();
+                        try
+                        {
+                            fibonacciInt = Int32.Parse(fibonacci);
+                            fibonacciInt = RecursiveFibonacciSequence(fibonacciInt);
+                            Console.WriteLine("The number you are looking for is: " + fibonacciInt);
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine($"Unable to parse '{input}'");
+                        }
+                        break;
+                    case '0':
+                        Main();
+                        break;
+                    default:
+                        Console.WriteLine("Please enter some valid input (+, -, 0)");
+                        break;
+                }
+            }
+        }
+
         static void CheckFibonacciItterative()
         {
 
@@ -499,6 +550,16 @@ namespace SkalProj_Datastrukturer_Minne
             else return '<';
         }
 
+        static string RemoveClosedParantheses(string toBeedited, int openingParantheses)
+        {
+            string editedSting = "";
+            for (int i = 0; i < toBeedited.Length - 1; i++)
+            {
+                if (i != openingParantheses) editedSting += toBeedited[i];
+            }
+            return editedSting;
+        }
+
         static int RecursiveEven(int n)
         {
             if (n == 0)
@@ -512,14 +573,13 @@ namespace SkalProj_Datastrukturer_Minne
         static int RecursiveFibonacciSequence(int n)
         {
 
-            if (n == 0)
+            if (n < 1)
             {
-                return 1;
+                throw new ArgumentException("Not deined for 2" + n);
             }
-            else
-            {
-                return (RecursiveFibonacciSequence(n - 2) + 1);
-            }
+            if (n == 1 || n == 2) return 1;
+            return (RecursiveFibonacciSequence(n - 2) + RecursiveFibonacciSequence(n - 1));
+            
         }
 
         static int ItterativeEven(int n)
@@ -535,21 +595,20 @@ namespace SkalProj_Datastrukturer_Minne
             {
                 if (i == 0) damnHowMuchEasierIteerativeIsThanRecursive.Add(i);
                 else if (i == 1) damnHowMuchEasierIteerativeIsThanRecursive.Add(i);
-                else damnHowMuchEasierIteerativeIsThanRecursive.Add(i + damnHowMuchEasierIteerativeIsThanRecursive[i - 2]);
+                else damnHowMuchEasierIteerativeIsThanRecursive.Add(damnHowMuchEasierIteerativeIsThanRecursive[i - 1] + damnHowMuchEasierIteerativeIsThanRecursive[i - 2]);
             }
-            return damnHowMuchEasierIteerativeIsThanRecursive[n + 1];
+
+            PrintList(damnHowMuchEasierIteerativeIsThanRecursive);
+            return damnHowMuchEasierIteerativeIsThanRecursive[n - 1];
         }
 
-        static string RemoveClosedParantheses(string toBeedited, int openingParantheses)
+        static void PrintList(List<int> list)
         {
-            string editedSting = "";
-            for (int i = 0; i < toBeedited.Length - 1; i++)
+            for (int i = 0; i < list.Count; i++)
             {
-                if (i != openingParantheses) editedSting += toBeedited[i];
+                Console.WriteLine("Item: " + i + "Number: " + list[i]);
             }
-            return editedSting;
         }
-
 
     }
 
