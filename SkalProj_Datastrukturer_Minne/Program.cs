@@ -321,8 +321,8 @@ namespace SkalProj_Datastrukturer_Minne
                     case '+':
                         Console.WriteLine("write your text, w ");
                         toBetested = Console.ReadLine();
-                        //   if (TestStringParantheses(toBetested)) Console.WriteLine("Test sucess!");
-                        // else Console.WriteLine("Test failed!");
+                        if (TestStringParanthesesTheMotherShip(toBetested)) Console.WriteLine("Test sucess!");
+                        else Console.WriteLine("Test failed!");
                         break;
                     case '0':
                         Main();
@@ -378,26 +378,31 @@ namespace SkalProj_Datastrukturer_Minne
         }
 
 
-        static bool TestStringParanthesesTheMothership(string toBeTested)
+        static bool TestStringParanthesesTheMotherShip(string toBeTested)
         {
             //making a sting of all Parantheses
-            string actualParentesisopeners = MakeListOfParantheses(toBeTested);
+            string actualParentesis = MakeListOfParantheses(toBeTested);
             string updatedWord;
-
-            for (int i = actualParentesisopeners.Length; i >= 0; i--)
-            {
-                //seeing so that the last char is a closing Parantheses
-                if (CheckClosingParantheses(actualParentesisopeners[i]))
+           // if (toBeTested.Length > 1)
+            //{
+                for (int i = actualParentesis.Length; i >= 0; i--)
                 {
-                    int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesisopeners);
-                    if (openingParanthesesIndex == -1) return false;
-                    else 
+                    //seeing so that the last char is a closing Parantheses
+                    if (actualParentesis.Length > 0 &&  CheckClosingParantheses(actualParentesis[i - 1]))
                     {
-                        updatedWord = RemoveClosedParantheses(actualParentesisopeners, openingParanthesesIndex);
-                        TestStringParanthesesTheMothership(updatedWord);
-                    } 
+                        //seeing where the closest opening Parantheses or returning -1 if it finds non
+                        int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
+                        if (openingParanthesesIndex == -1) return false;
+                        else
+                        {
+                            //removing the the last char, ie a closing Parantheses, and the opening Parantheses
+                            updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
+                            //calling this metod again
+                            TestStringParanthesesTheMotherShip(updatedWord);
+                        }
+                    }
                 }
-            }
+            //}
             return true;
         }
 
@@ -413,7 +418,7 @@ namespace SkalProj_Datastrukturer_Minne
             return actualParentesis;
 
         }
-        
+
         static bool CheckClosingParantheses(char lastChar)
         {
             List<char> negativeChars = new List<char>() { ')', ']', '}', '>' };
@@ -423,8 +428,8 @@ namespace SkalProj_Datastrukturer_Minne
 
         static int IndexOfOpeningParantheses(string toBeTested)
         {
-            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length]);
-            for (int i = toBeTested.Length; i >= 0; i--)
+            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length-1]);
+            for (int i = toBeTested.Length -1; i >= 0; i--)
             {
                 if (toBeTested[i] == openingParantheses) return i;
             }
