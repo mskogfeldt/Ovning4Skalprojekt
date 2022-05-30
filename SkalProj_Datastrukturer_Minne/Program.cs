@@ -489,26 +489,27 @@ namespace SkalProj_Datastrukturer_Minne
             //making a sting of all Parantheses
             string actualParentesis = MakeListOfParantheses(toBeTested);
             string updatedWord;
-            // if (toBeTested.Length > 1)
-            //{
-            for (int i = actualParentesis.Length; i >= 0; i--)
+
+
+            // first checking so that its even so there is no singel Parantheses
+            if (actualParentesis.Length % 2 != 0) return false;
+            //seeing so that i is not 0 to avoid out of bounds, and that the last char is a closing Parantheses
+            if (actualParentesis.Length > 0) 
             {
-                //seeing so that the last char is a closing Parantheses
-                if (actualParentesis.Length > 0 && CheckClosingParantheses(actualParentesis[i - 1]))
-                {
-                    //seeing where the closest opening Parantheses or returning -1 if it finds non
-                    int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
-                    if (openingParanthesesIndex == -1) return false;
-                    else
-                    {
-                        //removing the the last char, ie a closing Parantheses, and the opening Parantheses
-                        updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
-                        //calling this metod again
-                        TestStringParanthesesTheMotherShip(updatedWord);
-                    }
-                }
+                if (CheckClosingParantheses(actualParentesis[actualParentesis.Length - 1]) == false) return false;
+            } 
+            
+            //seeing where the closest opening Parantheses or returning -1 if it finds non
+            int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
+            if (openingParanthesesIndex == -1) return false;
+            else
+            {
+                //removing the the last char, ie a closing Parantheses, and the opening Parantheses
+                updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
+                if (updatedWord.Length == actualParentesis.Length) return true;
+                //calling this metod again
+                else TestStringParanthesesTheMotherShip(updatedWord);
             }
-            //}
             return true;
         }
 
@@ -534,10 +535,13 @@ namespace SkalProj_Datastrukturer_Minne
 
         static int IndexOfOpeningParantheses(string toBeTested)
         {
-            char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length - 1]);
-            for (int i = toBeTested.Length - 1; i >= 0; i--)
+            if(toBeTested.Length > 0)
             {
-                if (toBeTested[i] == openingParantheses) return i;
+                char openingParantheses = FindOpeningParantheses(toBeTested[toBeTested.Length - 1]);
+                for (int i = toBeTested.Length - 1; i >= 0; i--)
+                {
+                    if (toBeTested[i] == openingParantheses) return i;
+                }
             }
             return -1;
         }
@@ -573,13 +577,16 @@ namespace SkalProj_Datastrukturer_Minne
         static int RecursiveFibonacciSequence(int n)
         {
 
-            if (n < 1)
+            if (n < 0)
             {
                 throw new ArgumentException("Not deined for 2" + n);
             }
-            if (n == 1 || n == 2) return 1;
+            //if (n == 0 || n == 1) return 1;
+            Console.WriteLine("Debug: " + n);
+            if (n == 0) return 0;
+            else if (n == 1) return 1;
             return (RecursiveFibonacciSequence(n - 2) + RecursiveFibonacciSequence(n - 1));
-            
+
         }
 
         static int ItterativeEven(int n)
@@ -614,3 +621,39 @@ namespace SkalProj_Datastrukturer_Minne
 
 
 }
+/*
+ static bool TestStringParanthesesTheMotherShip(string toBeTested)
+        {
+            //making a sting of all Parantheses
+            string actualParentesis = MakeListOfParantheses(toBeTested);
+            string updatedWord;
+            // if (toBeTested.Length > 1)
+            //{
+            for (int i = actualParentesis.Length; i >= 0; i--)
+            {
+                
+                // first checking so that its even so there is no singel Parantheses
+                if (actualParentesis.Length % 2 != 0) return false;
+                //seeing so that i is not 0 to avoid out of bounds, and that the last char is a closing Parantheses
+                else if (i > 0 && !CheckClosingParantheses(actualParentesis[i - 1])) return false;
+                
+                if (i > 0)
+                {
+                    //seeing where the closest opening Parantheses or returning -1 if it finds non
+                    int openingParanthesesIndex = IndexOfOpeningParantheses(actualParentesis);
+                    if (openingParanthesesIndex == -1) return false;
+                    else
+                    {
+                        //removing the the last char, ie a closing Parantheses, and the opening Parantheses
+                        updatedWord = RemoveClosedParantheses(actualParentesis, openingParanthesesIndex);
+                        if (updatedWord.Length == actualParentesis.Length) return true;
+                        //calling this metod again
+                        TestStringParanthesesTheMotherShip(updatedWord);
+                    }
+                }
+                //else if()
+                
+            }
+            //}
+            return true;
+        } */
